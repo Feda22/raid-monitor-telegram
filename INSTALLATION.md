@@ -2,9 +2,9 @@
 
 Este documento explica cómo instalar y ejecutar el script de monitoreo de RAID con notificaciones a Telegram en un servidor Linux.
 
-==================================================
+======================================
 REQUISITOS
-==================================================
+======================================
 
 - Servidor Linux con RAID administrado por mdadm
 - Python 3.6 o superior
@@ -12,9 +12,9 @@ REQUISITOS
 - Dos bots de Telegram creados con @BotFather
 - Chat IDs de Telegram donde se enviarán las alertas
 
-==================================================
+======================================
 PASOS DE INSTALACIÓN
-==================================================
+======================================
 
 1. Crear directorio de instalación
 
@@ -115,9 +115,9 @@ sudo systemctl status raid-monitor
 sudo tail -f /var/log/raid_monitor.log
 
 
-==================================================
+=======================================
 COMANDOS ÚTILES
-==================================================
+=======================================
 
 Iniciar servicio
 
@@ -140,9 +140,9 @@ Ver logs
 sudo tail -f /var/log/raid_monitor.log
 
 
-==================================================
+=======================================
 SOLUCIÓN DE PROBLEMAS
-==================================================
+=======================================
 
 Problema: El bot de Telegram no envía mensajes  
 Solución: Verificar que el bot esté agregado al grupo y tenga permisos para enviar mensajes.
@@ -155,9 +155,9 @@ Problema: Probar conectividad con la API de Telegram
 curl "https://api.telegram.org/botYOUR_TOKEN/getMe"
 
 
-==================================================
+=======================================
 NOTA DE SEGURIDAD
-==================================================
+=======================================
 
 No publicar tokens reales de Telegram en repositorios públicos.
 
