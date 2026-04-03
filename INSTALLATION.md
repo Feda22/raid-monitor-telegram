@@ -1,86 +1,86 @@
-# RAID Monitor with Telegram Alerts - Installation Guide
+# RAID Monitor con Alertas en Telegram - Guía de Instalación
 
-This document explains how to install and run the RAID monitoring script with Telegram notifications on a Linux server.
-
-==================================================
-REQUIREMENTS
-==================================================
-
-- Linux server with mdadm RAID
-- Python 3.6 or newer
-- Root privileges
-- Two Telegram bots created with @BotFather
-- Telegram chat IDs where alerts will be sent
+Este documento explica cómo instalar y ejecutar el script de monitoreo de RAID con notificaciones a Telegram en un servidor Linux.
 
 ==================================================
-INSTALLATION STEPS
+REQUISITOS
 ==================================================
 
-1. Create installation directory
+- Servidor Linux con RAID administrado por mdadm
+- Python 3.6 o superior
+- Acceso root
+- Dos bots de Telegram creados con @BotFather
+- Chat IDs de Telegram donde se enviarán las alertas
+
+==================================================
+PASOS DE INSTALACIÓN
+==================================================
+
+1. Crear directorio de instalación
 
 sudo mkdir -p /opt/raid-scripts
 cd /opt/raid-scripts
 
 
-2. Create configuration file (config.py)
+2. Crear archivo de configuración (config.py)
 
 sudo nano /opt/raid-scripts/config.py
 
-Insert the following configuration and modify it according to your environment:
+Insertar la siguiente configuración y modificarla según el entorno:
 
 #!/usr/bin/env python3
-# config.py - RAID Monitor Configuration
+# config.py - Configuración del monitor RAID
 
-# Telegram Bot 1: Critical alerts (RAID lost or inactive)
+# Telegram Bot 1: Alertas críticas (RAID perdido o inactivo)
 TELEGRAM_TOKEN_ALERTAS = "YOUR_ALERT_TOKEN"
 TELEGRAM_CHAT_ID_ALERTAS = "YOUR_ALERT_CHAT_ID"
 
-# Telegram Bot 2: Operational notifications
+# Telegram Bot 2: Notificaciones operativas
 TELEGRAM_TOKEN_NOTICIAS = "YOUR_OPERATIONS_TOKEN"
 TELEGRAM_CHAT_ID_NOTICIAS = "YOUR_OPERATIONS_CHAT_ID"
 
-# Server information
+# Información del servidor
 HOSTNAME = "SERVER_NAME"
 IP_LAN = "192.168.1.X"
 
-# Paths
+# Rutas
 LOG_FILE = "/var/log/raid_monitor.log"
 MDSTAT_PATH = "/proc/mdstat"
 
-# Monitoring intervals (seconds)
+# Intervalos de monitoreo (segundos)
 CHECK_INTERVAL_ALERTAS = 300
 CHECK_INTERVAL_NOTICIAS = 1800
 CHECK_INTERVAL_RESCAN = 60
 
 
-3. Create log file
+3. Crear archivo de log
 
 sudo touch /var/log/raid_monitor.log
 
 
-4. Copy the monitoring script
+4. Copiar el script de monitoreo
 
 sudo cp raid-monitor-telegram.py /opt/raid-scripts/
 sudo chmod +x /opt/raid-scripts/raid-monitor-telegram.py
 
 
-5. Test manual execution
+5. Probar ejecución manual
 
-Before installing the service, verify that the script runs correctly.
+Antes de instalar el servicio, verificar que el script funcione correctamente.
 
 sudo python3 /opt/raid-scripts/raid-monitor-telegram.py
 
-Press Ctrl+C to stop the script.
+Presionar Ctrl+C para detener el script.
 
 
-6. Create systemd service
+6. Crear servicio systemd
 
 sudo nano /etc/systemd/system/raid-monitor.service
 
-Add the following configuration:
+Agregar la siguiente configuración:
 
 [Unit]
-Description=RAID Monitor with Telegram Alerts
+Description=RAID Monitor con Alertas en Telegram
 After=network.target
 
 [Service]
@@ -98,66 +98,68 @@ StandardError=inherit
 WantedBy=multi-user.target
 
 
-7. Enable and start the service
+7. Habilitar e iniciar el servicio
 
 sudo systemctl daemon-reload
 sudo systemctl enable raid-monitor
 sudo systemctl start raid-monitor
 
 
-8. Verify service status
+8. Verificar estado del servicio
 
 sudo systemctl status raid-monitor
 
 
-9. Monitor logs in real time
+9. Monitorear logs en tiempo real
 
 sudo tail -f /var/log/raid_monitor.log
 
 
 ==================================================
-USEFUL COMMANDS
+COMANDOS ÚTILES
 ==================================================
 
-Start service
+Iniciar servicio
 
 sudo systemctl start raid-monitor
 
-Stop service
+Detener servicio
 
 sudo systemctl stop raid-monitor
 
-Restart service
+Reiniciar servicio
 
 sudo systemctl restart raid-monitor
 
-Check status
+Ver estado
 
 sudo systemctl status raid-monitor
 
-View logs
+Ver logs
 
 sudo tail -f /var/log/raid_monitor.log
 
 
 ==================================================
-TROUBLESHOOTING
+SOLUCIÓN DE PROBLEMAS
 ==================================================
 
-Problem: Telegram bot does not send messages  
-Solution: Verify that the bot is added to the group and has permission to send messages.
+Problema: El bot de Telegram no envía mensajes  
+Solución: Verificar que el bot esté agregado al grupo y tenga permisos para enviar mensajes.
 
-Problem: Permission error when reading /proc/mdstat  
-Solution: Run the script with root privileges.
+Problema: Error de permisos al leer /proc/mdstat  
+Solución: Ejecutar el script con privilegios root.
 
-Problem: Test Telegram bot connectivity  
+Problema: Probar conectividad con la API de Telegram
 
 curl "https://api.telegram.org/botYOUR_TOKEN/getMe"
 
 
 ==================================================
-SECURITY NOTICE
+NOTA DE SEGURIDAD
 ==================================================
 
-Do not publish real Telegram tokens in public repositories.
-Store tokens in configuration files excluded by .gitignore or use environment variables.
+No publicar tokens reales de Telegram en repositorios públicos.
+
+Guardar los tokens en archivos de configuración excluidos por `.gitignore`
+o utilizar variables de entorno.
